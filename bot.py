@@ -122,9 +122,9 @@ def main(bot, settings):
     while True:
         messages = bot.get_messages()
         for m in messages:
-            if "/catch" in m['text']:
+            if m['text'].startswith("/catch"):
                 add_mailing_list(settings, m)
-            elif "/check" in m['text']:
+            elif m['text'].startswith("/check"):
                 bot.send_message(m['chat']['id'], check_all(settings))
 
         status_message = ""
@@ -135,7 +135,9 @@ def main(bot, settings):
             status_message += updated_resolve[1]
 
         if updated_sock_connect[0]:
-            if not d.last_sock and ping("ya.ru"): # if ping(ya) is ok but host is not
+            if not d.last_sock and not ping("ya.ru"): # if ping(ya) is ok but host is not
+                status_message += updated_sock_connect[1]
+            elif updated_resolve[0]:
                 status_message += updated_sock_connect[1]
 
         if status_message != "" and not just_launched:
