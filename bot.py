@@ -70,7 +70,12 @@ def check_all(settings):
 
 
 def add_mailing_list(s, m):
-    mlist = json.load(open(s['mailing_list']))
+    try:
+        mlist = json.load(open(s['mailing_list']))
+    except FileNotFoundError as e:
+        print("Mailing list is not found, creating new!")
+        mlist = {'chats': []}
+
     chat_id = m['chat']['id']
     if chat_id not in mlist['chats']:
         mlist['chats'].append(m['chat']['id'])
